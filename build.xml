@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="setup-composer" default="build-composer" phingVersion="2.16">
+
+    <target name="build-composer" depends="composer-check-dependencies, composer-setup-properties, composer-clean, composer-setup-directories, composer-setup-composer, composer-setup-symlinks">
+        <exec command="${composer.directory}/composer --verbose --version" outputProperty="composer.version"/>
+        <echo msg="Composer is now installed in ${composer.directory}" />
+        <echo msg="Composer version is: ${composer.version}" />
+    </target>
+
+    <target name="composer-check-dependencies">
+        <exec command="which php" returnProperty="php"/>
+        <if>
+            <equals arg1="${php}" arg2="0"/>
+            <then>
+                <exec command="php -v | grep built | awk {'print $2'}" outputProperty="php.version"/>
+                <echo msg="PHP version: ${php.version}"/>
+            </then>
+            <else>
+                <fail msg="PHP is not available."/>
+            </else>
+        </if>
+    </target>
+
+    <target name="composer-setup-properties">
+        <property file="build.properties.local" />
+        <property file="build.properties" />
+        <property file="build.properties.dist" />
+    </target>
+
+    <target name="composer-clean">
+        <delete file="${composer.directory}/composer" />
+        <delete dir="${composer.directory}" />
+    </target>
+
+    <target name="composer-setup-directories">
+        <mkdir dir="${composer.directory}"/>
+    </target>
+
+    <target name="composer-setup-composer">
+        <mkdir dir="${composer.directory}" />
+        <httpget url="https://getcomposer.org/composer.phar" dir="${composer.directory}" sslVerifyPeer="false">
+            <config name="proxy" value="${httpget.config.proxy}"/>
+        </httpget>
+        <chmod file="${composer.directory}/composer.phar" mode="0755" />
+        <!-- <delete file="/tmp/installer" /> -->
+    </target>
+
+    <target name="composer-setup-symlinks">
+        <symlink target="${composer.directory}/composer.phar" link="${composer.directory}/composer" />
+    </target>
+
+</project>
