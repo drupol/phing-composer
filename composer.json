@@ -1,0 +1,15 @@
+{
+  "name":     "drupol/phing-composer",
+  "homepage": "https://packagist.org/packages/drupol/phing-composer",
+  "description": "Install composer with Phing.",
+  "keywords": ["phing", "composer", "continuous integration", "ci"],
+  "type": "library",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Pol Dellaiera",
+      "email": "pol.dellaiera@protonmail.com",
+      "role": "Author"
+    }
+  ]
+}
